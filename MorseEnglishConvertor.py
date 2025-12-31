@@ -82,11 +82,12 @@ class MorseEnglishConvertor:
                 ))
 
         # Normalize and convert to 16-bit PCM
-        audio = audio / np.max(np.abs(audio))
+        max_val = np.max(np.abs(audio))
+        if max_val > 0:
+            audio = audio / max_val
+        
         audio_int16 = np.int16(audio * 32767)
 
-        write(output_file, self.rate, audio_int16)
-        # Write WAV to memory instead of disk
         buffer = io.BytesIO()
         write(buffer, self.rate, audio_int16)
         buffer.seek(0)
